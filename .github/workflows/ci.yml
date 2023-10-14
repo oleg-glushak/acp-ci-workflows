@@ -31,9 +31,6 @@ jobs:
       steps:
           - uses: actions/checkout@v3
 
-          - name: Install apt-packages
-            run: |
-                sudo apt-get install apache2-utils
           - name: git clone docker-sdk
             run: |
               git clone --depth 1 https://github.com/spryker/docker-sdk.git -b onsteroids ./docker
