@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  workflow_call:
+    inputs:
+      aws_account_id:
+        required: true
+        type: number
+      aws_region:
+        required: true
+        type: string
+      spryker_project_name:
+        required: true
+        type: string
+      deploy_file_path:
+        required: true
+        type: string
+
+jobs:
+  build-push-ecr:
+      name: "Build and push containers to ECR"
+      runs-on: "gha-runner-scale-set"
+      env:
+          PROGRESS_TYPE: plain
+          BUILDKIT_PROGRESS: plain
+          # SPRYKER_PLATFORM_IMAGE: spryker/php:8.1
+          AWS_ACCOUNT_ID: ${{ inputs.aws_account_id }}
+          AWS_REGION: ${{ inputs.aws_region }}
+          SPRYKER_PROJECT_NAME: ${{ inputs.spryker_project_name }}
+
+      steps:
+          - uses: actions/checkout@v3
+
+          - name: Install apt-packages
+            run: |
+                sudo apt-get install apache2-utils
+          - name: git clone docker-sdk
+            run: |
+              git clone --depth 1 https://github.com/spryker/docker-sdk.git -b onsteroids ./docker
+          - name: Run docker-sdk boot
+            run: |
+                docker/sdk boot ${{ inputs.deploy_file_path }}
+          - name: Run docker-sdk export images-slim
+            run: |
+              docker/sdk export images-slim -d ecr-slim ${{ inputs.deploy_file_path }}
