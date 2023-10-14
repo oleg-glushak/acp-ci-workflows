@@ -33,6 +33,7 @@ jobs:
 
           - name: Install apt-packages
             run: |
+                sude apt-get update
                 sudo apt-get install git
           - name: git clone docker-sdk
             run: |
