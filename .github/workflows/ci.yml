@@ -34,7 +34,7 @@ jobs:
           - name: Install apt-packages
             run: |
                 sudo apt-get update
-                sudo apt-get install --no-install-recommends -y git pigz iproute2
+                sudo apt-get install --no-install-recommends -y git pigz iproute2 wget docker-buildx-plugin
                 wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && chmod a+x /usr/local/bin/yq
           - name: git clone docker-sdk
             run: |
