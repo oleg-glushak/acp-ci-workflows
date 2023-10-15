@@ -34,8 +34,10 @@ jobs:
           - name: Install apt-packages
             run: |
                 sudo apt-get update
-                sudo apt-get install --no-install-recommends -y git pigz iproute2 wget docker-buildx-plugin
+                sudo apt-get install --no-install-recommends -y git pigz iproute2 wget curl
                 wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && chmod a+x /usr/local/bin/yq
+                curl -fsSL https://get.docker.com -o get-docker.sh
+                sudo sh get-docker.sh
           - name: git clone docker-sdk
             run: |
               git clone --depth 1 https://github.com/spryker/docker-sdk.git -b onsteroids ./docker
