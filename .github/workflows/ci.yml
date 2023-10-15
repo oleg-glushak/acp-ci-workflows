@@ -34,12 +34,15 @@ jobs:
           - name: Install apt-packages
             run: |
                 sudo apt-get update
-                sudo apt-get install -y git
+                sudo apt-get install --no-install-recommends -y git pigz iproute2
+                wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && chmod a+x /usr/local/bin/yq
           - name: git clone docker-sdk
             run: |
               git clone --depth 1 https://github.com/spryker/docker-sdk.git -b onsteroids ./docker
           - name: Run docker-sdk boot
             run: |
+                docker -v
+                
                 export DOCKER_HOST=unix:///run/docker/docker.sock
                 docker/sdk boot ${{ inputs.deploy_file_path }}
           - name: Run docker-sdk export images-slim
