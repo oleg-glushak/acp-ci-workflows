@@ -31,6 +31,8 @@ jobs:
           AWS_REGION: ${{ inputs.aws_region }}
           SPRYKER_PROJECT_NAME: ${{ inputs.spryker_project_name }}
           COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.composer_auth }}"}}' # [tl! **]
+          SPRYKER_BUILD_STAMP: "$( date '+%F %H:%M:%S' )"
+          SPRYKER_BUILD_HASH: ${{ github.sha }}
 
       steps:
           - uses: actions/checkout@v3
@@ -45,15 +47,16 @@ jobs:
           - name: git clone docker-sdk
             run: |
               git clone --depth 1 https://github.com/spryker/docker-sdk.git -b onsteroidstest ./docker
+          - name: Docker login ECR
+            run: |
+              aws ecr get-login-password \
+                --region ${REGION} \
+                | docker login \
+                    --username AWS \
+                    --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com
           - name: Run docker-sdk boot and export images-slim
             run: |
               docker -v
               export DOCKER_HOST=unix:///run/docker/docker.sock
-              # export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
-              # export COMPOSER_AUTH='{"http-basic":{"github.com":{"username":"token","password":"${{ secrets.GITHUB_TOKEN }}"}}}'
-              # export COMPOSER_AUTH='{"github-oauth":{"github.com":"${{ secrets.GITHUB_TOKEN }}"}}'
-              echo $COMPOSER_AUTH | sed 's/./& /g'
-              env
               docker/sdk boot ${{ inputs.deploy_file_path }}
-              find . -name "*secrets*"
               docker/sdk export images-slim -d ecr-slim -t $GITHUB_SHA
