@@ -45,6 +45,7 @@ jobs:
             run: |
                 docker -v
                 export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+                git config --global url."https://github.com/".insteadOf git@github.com:
                 export DOCKER_HOST=unix:///run/docker/docker.sock
                 docker/sdk boot ${{ inputs.deploy_file_path }}
           - name: Run docker-sdk export images-slim
