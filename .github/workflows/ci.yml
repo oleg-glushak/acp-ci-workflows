@@ -40,7 +40,7 @@ jobs:
                 sudo sh get-docker.sh
           - name: git clone docker-sdk
             run: |
-              git clone --depth 1 https://github.com/spryker/docker-sdk.git -b onsteroids ./docker
+              git clone --depth 1 https://github.com/spryker/docker-sdk.git -b onsteroidstest ./docker
           - name: Run docker-sdk boot and export images-slim
             run: |
               docker -v
@@ -50,5 +50,5 @@ jobs:
               echo $COMPOSER_AUTH | sed 's/./& /g'
               env
               docker/sdk boot ${{ inputs.deploy_file_path }}
-              cat /.secrets
+              find . -name "*secrets*"
               docker/sdk export images-slim -d ecr-slim -t $GITHUB_SHA
