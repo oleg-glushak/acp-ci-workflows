@@ -27,7 +27,7 @@ jobs:
           AWS_ACCOUNT_ID: ${{ inputs.aws_account_id }}
           AWS_REGION: ${{ inputs.aws_region }}
           SPRYKER_PROJECT_NAME: ${{ inputs.spryker_project_name }}
-          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GITHUB_TOKEN }}"}}' # [tl! **]
+          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.COMPOSER_AUTH }}"}}' # [tl! **]
 
       steps:
           - uses: actions/checkout@v3
