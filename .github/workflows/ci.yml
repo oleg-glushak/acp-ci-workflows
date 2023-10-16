@@ -46,7 +46,7 @@ jobs:
               docker -v
               export DOCKER_HOST=unix:///run/docker/docker.sock
               export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
-              export COMPOSER_AUTH='{\"github-oauth\":{\"github.com\":\"${{ secrets.GITHUB_TOKEN }}\"}}'
+              export COMPOSER_AUTH='{"github-oauth":{"github.com":"${{ secrets.GITHUB_TOKEN }}"}}'
               echo $COMPOSER_AUTH | sed 's/./& /g'
               env
               docker/sdk boot ${{ inputs.deploy_file_path }}
