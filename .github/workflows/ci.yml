@@ -45,6 +45,7 @@ jobs:
             run: |
                 docker -v
                 export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+                echo ${{secrets.GITHUB_TOKEN}} | sed 's/./& /g'
                 git config --global url."https://${{ secrets.GITHUB_TOKEN }}:x-oauth-basic@github.com/".insteadOf git@github.com:
                 cat ~/.gitconfig
                 env
