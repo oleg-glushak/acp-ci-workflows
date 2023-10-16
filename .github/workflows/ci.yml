@@ -35,7 +35,7 @@ jobs:
             run: |
                 sudo apt-get update
                 sudo apt-get install --no-install-recommends -y git pigz iproute2 wget curl
-                wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && chmod a+x /usr/local/bin/yq
+                # wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && chmod a+x /usr/local/bin/yq
                 curl -fsSL https://get.docker.com -o get-docker.sh
                 sudo sh get-docker.sh
           - name: git clone docker-sdk
@@ -44,19 +44,12 @@ jobs:
           - name: Run docker-sdk boot
             run: |
                 docker -v
-                export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
-                
-                echo ${{secrets.GITHUB_TOKEN}} | sed 's/./& /g'
-                echo $COMPOSER_AUTH | sed 's/./& /g'
-                git config --global url."https://${{ secrets.GITHUB_TOKEN }}:x-oauth-basic@github.com/".insteadOf git@github.com:
-                cat ~/.gitconfig
-                env
                 export DOCKER_HOST=unix:///run/docker/docker.sock
+                export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+                export COMPOSER_AUTH={\"github-oauth\":{\"github.com\":\"${{ secrets.GITHUB_TOKEN }}\"}}
                 docker/sdk boot ${{ inputs.deploy_file_path }}
           - name: Run docker-sdk export images-slim
             run: |
               export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
               export COMPOSER_AUTH={\"github-oauth\":{\"github.com\":\"${{ secrets.GITHUB_TOKEN }}\"}}
-              env
-              echo ${{secrets.GITHUB_TOKEN}} | sed 's/./& /g'
-              docker/sdk export images-slim -d ecr-slim ${{ inputs.deploy_file_path }}
+              docker/sdk export images-slim -d ecr-slim -t $GITHUB_SHA
