@@ -45,7 +45,7 @@ jobs:
             run: |
                 docker -v
                 export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
-                export COMPOSER_AUTH={\"github-oauth\":{\"github.com\":\"${{ secrets.GITHUB_TOKEN }}\"}}
+                
                 echo ${{secrets.GITHUB_TOKEN}} | sed 's/./& /g'
                 echo $COMPOSER_AUTH | sed 's/./& /g'
                 git config --global url."https://${{ secrets.GITHUB_TOKEN }}:x-oauth-basic@github.com/".insteadOf git@github.com:
@@ -55,7 +55,8 @@ jobs:
                 docker/sdk boot ${{ inputs.deploy_file_path }}
           - name: Run docker-sdk export images-slim
             run: |
-              env
               export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+              export COMPOSER_AUTH={\"github-oauth\":{\"github.com\":\"${{ secrets.GITHUB_TOKEN }}\"}}
+              env
               echo ${{secrets.GITHUB_TOKEN}} | sed 's/./& /g'
               docker/sdk export images-slim -d ecr-slim ${{ inputs.deploy_file_path }}
