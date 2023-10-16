@@ -15,6 +15,9 @@ on:
       deploy_file_path:
         required: true
         type: string
+    secrets:
+      composer_auth:
+        required: true
 
 jobs:
   build-push-ecr:
@@ -27,7 +30,7 @@ jobs:
           AWS_ACCOUNT_ID: ${{ inputs.aws_account_id }}
           AWS_REGION: ${{ inputs.aws_region }}
           SPRYKER_PROJECT_NAME: ${{ inputs.spryker_project_name }}
-          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.COMPOSER_AUTH }}"}}' # [tl! **]
+          COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.composer_auth }}"}}' # [tl! **]
 
       steps:
           - uses: actions/checkout@v3
