@@ -58,5 +58,6 @@ jobs:
             run: |
               docker -v
               export DOCKER_HOST=unix:///run/docker/docker.sock
+              env
               docker/sdk boot ${{ inputs.deploy_file_path }}
               docker/sdk export images-slim -d ecr-slim -t $GITHUB_SHA
