@@ -47,11 +47,6 @@ jobs:
           - name: git clone docker-sdk
             run: |
               git clone --depth 1 https://github.com/spryker/docker-sdk.git -b onsteroidstest ./docker
-          # - name: Login to AWS
-          #  uses: aws-actions/configure-aws-credentials@v4
-          #  with:
-          #    aws-region: ${{ env.AWS_REGION }}
-          #    role-to-assume: arn:aws:iam::880063349454:role/gha-runner-scale-set-irsa@arc-runners2
           - name: Login to Amazon ECR
             id: login-ecr
             uses: aws-actions/amazon-ecr-login@v2
@@ -59,6 +54,24 @@ jobs:
             run: |
               docker -v
               export DOCKER_HOST=unix:///run/docker/docker.sock
-              env
+
+              # Increase network utilisation
+              cat << EOF > /etc/docker/daemon.json
+              {
+                "max-concurrent-uploads": 200,
+                "max-concurrent-downloads": 200
+              }
+              EOF
+              kill -HUP $(cat /var/run/docker.pid)
+
+              # Pre-pull images asynchronously 
+              docker pull oleg1628/docker-php:slim &
+              docker pull alpine:latest &
+              docker pull spryker/jenkins-boilerplate:2.361.1 &
+              docker pull $${AWS_ACCOUNT_ID}.dkr.ecr.$${AWS_REGION}.amazonaws.com/$${SPRYKER_PROJECT_NAME}-cache:node-cache-latest &
+              docker pull node:16-alpine &
+              docker pull fholzer/nginx-brotli:v1.18.0 &
+              
               docker/sdk boot ${{ inputs.deploy_file_path }}
               docker/sdk export images-slim -d ecr-slim -t $GITHUB_SHA
+              wait
