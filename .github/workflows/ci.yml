@@ -56,7 +56,7 @@ jobs:
               export DOCKER_HOST=unix:///run/docker/docker.sock
 
               # Increase network utilisation
-              sudo sh -c 'sudo cat << EOF > /etc/docker/daemon.json
+              sudo sh -c 'cat << EOF > /etc/docker/daemon.json
               {
                 "max-concurrent-uploads": 200,
                 "max-concurrent-downloads": 200
