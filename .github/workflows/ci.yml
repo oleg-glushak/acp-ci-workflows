@@ -40,6 +40,7 @@ jobs:
           - name: Install apt-packages
             run: |
                 # Increase network utilisation
+                sudo mkdir /etc/docker/
                 sudo sh -c 'cat << EOF > /etc/docker/daemon.json
                 {
                   "max-concurrent-uploads": 200,
