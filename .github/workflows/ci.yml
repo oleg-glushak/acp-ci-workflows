@@ -56,13 +56,12 @@ jobs:
               export DOCKER_HOST=unix:///run/docker/docker.sock
 
               # Increase network utilisation
-              sudo touch /etc/docker/daemon.json
-              sudo cat << EOF > /etc/docker/daemon.json
+              sudo sh -c 'sudo cat << EOF > /etc/docker/daemon.json
               {
                 "max-concurrent-uploads": 200,
                 "max-concurrent-downloads": 200
               }
-              EOF
+              EOF'
               kill -HUP $(cat /var/run/docker.pid)
 
               # Pre-pull images asynchronously 
