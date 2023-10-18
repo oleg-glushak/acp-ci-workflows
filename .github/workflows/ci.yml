@@ -74,4 +74,4 @@ jobs:
               
               docker/sdk boot ${{ inputs.deploy_file_path }}
               docker/sdk export images-slim -d ecr-slim -t $GITHUB_SHA
-              wait
+              # wait
