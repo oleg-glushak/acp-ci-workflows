@@ -62,8 +62,7 @@ jobs:
                 "max-concurrent-downloads": 200
               }
               EOF'
-              find / -type f -name "docker.pid" 2>/dev/null
-              kill -HUP $(cat /run/docker.pid)
+              # kill -HUP $(cat /run/docker.pid)
 
               # Pre-pull images asynchronously 
               docker pull oleg1628/docker-php:slim &
